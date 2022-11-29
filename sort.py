@@ -52,24 +52,23 @@ def get_ext(name: str) -> str:
 
 # creating normalize function that will replace cyrillic letters with latin and replace all symbols that are not in latin with "_"
 # at the end returns the name of the file in correct format
-# V2 added suffix to the renamed file to avoid files being renamed incorrectly
+# V.2 added Path to the file and extension suffix to the renamed file to avoid files being renamed with extension
 
 
 def normalize(name: str) -> str:
     path = Path(name)
-    new_name = path.stem
-    new_name = name.translate(TRANS)
+    new_name = path.name.translate(TRANS)
     new_name = re.sub(r"\W", "_", new_name)
     return new_name + path.suffix
 
 # creating a function that will check the archived files
-# V2 added a path to archive and it unpacks it now
+# V.2 added a path to archive and it unpacks it now to the archives folder
 
 
 def archive_check(folder: Path) -> None:
-    for file in folder(folder_to_sort / 'ARCHIVES').iterdir():
-        folder_for_file = folder(
-            folder_to_sort / 'ARCHIVES' / normalize(file.name.replace(file.suffix, '')))
+    for file in Path.joinpath(folder_to_sort / 'ARCHIVES').iterdir():
+        folder_for_file = Path.joinpath(
+            folder_to_sort / 'ARCHIVES' / normalize(file))
         folder_for_file.mkdir(exist_ok=True, parents=True)
 # unpacking the archive
         try:
@@ -132,9 +131,10 @@ def empty_folder(folder: Path) -> None:
                     continue
     return None
 
-
 # defining what the system should process sorting/cleaning
 # V2 corrected the arguments as per mentors comments
+
+
 def clean_folder(known_ext=known_ext,
                  unknown_ext=unknown_ext,
                  images=images,
@@ -146,6 +146,7 @@ def clean_folder(known_ext=known_ext,
     if len(sys.argv) != 2:
         print(f'Please specify the directory you wish to clean')
         quit()
+    # adding 'global' keyword to ensure the script goes through all files in the directory
     global folder_to_sort
     folder_to_sort = Path(sys.argv[1])
     if not Path(folder_to_sort).is_dir():
