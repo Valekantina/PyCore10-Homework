@@ -62,7 +62,7 @@ def normalize(name: str) -> str:
     return new_name + path.suffix
 
 # creating a function that will check the archived files
-# V.2 added a path to archive and it unpacks it now to the archives folder
+# V.2 added a path to archive and it unpacks it now to the 'archives' folder
 
 
 def archive_check(folder: Path) -> None:
@@ -157,6 +157,7 @@ def clean_folder(known_ext=known_ext,
     sort(folder_to_sort)
     archive_check(folder_to_sort)
     empty_folder(folder_to_sort)
+
 # outputting the results of the sort and providing a list of all files and extensions that were in the folder
     known_ext = list(set(known_ext))
     print(f'All known extensions: {known_ext}')
@@ -175,7 +176,6 @@ def clean_folder(known_ext=known_ext,
 
 
 # making sure the code will only run when sort.py file is executed as a script
-
 if __name__ == '__main__':
     clean_folder(known_ext=known_ext,
                  unknown_ext=unknown_ext,
