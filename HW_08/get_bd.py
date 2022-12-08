@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
-
 # creating a dictionary with all users names and days of birth
 users = [
-    {"name": "Bill", "birthday": "24 September 1989"},
-    {"name": "John", "birthday": "17 March 1998"},
-    {"name": "Kim", "birthday": "09 December 1996"},
-    {"name": "Max", "birthday": "07 December 1994"},
-    {"name": "Viktor", "birthday": "13 May 1963"},
-    {"name": "Valentyna", "birthday": "27 July 1994"}
+    {"name": "Bill", "birthday": "13 December 1989"},
+    {"name": "John", "birthday": "10 December 1998"},
+    {"name": "Kim", "birthday": "15 December 1996"},
+    {"name": "Max", "birthday": "16 December 1994"},
+    {"name": "Viktor", "birthday": "20 December 1963"},
+    {"name": "Valentyna", "birthday": "12 December 1994"},
+    {"name": "Dean", "birthday": "09 December 1979"},
 ]
 
 # defining get_birthdays_per_week function
@@ -21,12 +21,21 @@ def get_birthdays_per_week(users):
         'Wednesday': '',
         'Thursday': '',
         'Friday': '',
-        'Next Monday': ''
     }
-    # defining the start date of our search (datetime.now) + extracting the date only
-    start = datetime.now().date()
-    # defining the end date as current date + 7 days forward using timedelta
-    end = start + timedelta(days=7)
+    # defining the start date of our search (datetime.now)
+    # since we need the script to return all birthdays from Saturday of this week until next Friday (including)
+    # we will shift the start date depending on the date of running the script
+    today = datetime.now().date()
+    if today.weekday() == 0:
+        start = today + timedelta(days=5)
+    if today.weekday() == 1:
+        start = today + timedelta(days=4)
+    if today.weekday() == 2:
+        start = today + timedelta(days=3)
+    if today.weekday() == 3:
+        start = today + timedelta(days=2)
+    if today.weekday() == 4:
+        start = today + timedelta(days=1)
 
     # using for-loop to go through the users dictionary
     for person in users:
@@ -37,10 +46,13 @@ def get_birthdays_per_week(users):
         birthday = datetime.strptime(person["birthday"], "%d %B %Y")
         dob = datetime(start.year, birthday.month, birthday.day)
 
+        # defining the end date as start date + 7 days forward using timedelta
+        end = start + timedelta(days=7)
+
         # checking if the date of birth (dob) is within range from start date to the end date (today+7 days forward)
         if start <= dob.date() <= end:
             day = dob.weekday()  # if the date is within range - getting the weekday
-            if day == 0:
+            if day == 0 or day == 5 or day == 6:
                 weekdays['Monday'] += person['name']
                 weekdays['Monday'] += ', '
             if day == 1:
@@ -55,9 +67,6 @@ def get_birthdays_per_week(users):
             if day == 4:
                 weekdays['Friday'] += person['name']
                 weekdays['Friday'] += ', '
-            if day in (5, 6):
-                weekdays['Next Monday'] += person['name']
-                weekdays['Next Monday'] += ', '
     # using for-loop to go through all items in weekdays dictionary
     for key, value in weekdays.items():
         count = 0

@@ -1502,3 +1502,4 @@ virtual_env/Scripts/pip3.exe
 virtual_env/Scripts/pycodestyle.exe
 virtual_env/Scripts/python.exe
 virtual_env/Scripts/pythonw.exe
+virtual_env/test_2.py
